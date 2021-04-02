@@ -1,0 +1,3 @@
+C:/Users/CCK/CLionProjects/Rosetta-Book-Store/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/CCK/CLionProjects/Rosetta-Book-Store/cmake-build-debug/CMakeFiles/Rosetta_Book_Store.dir
+C:/Users/CCK/CLionProjects/Rosetta-Book-Store/cmake-build-debug/CMakeFiles/edit_cache.dir
