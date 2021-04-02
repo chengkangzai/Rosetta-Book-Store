@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/CCK/CLionProjects/Rosetta-Book-Store/Models/Book.h">
+			<Option target="Rosetta_Book_Store"/>
+		</Unit>
+		<Unit filename="C:/Users/CCK/CLionProjects/Rosetta-Book-Store/Query/BookQuery.h">
+			<Option target="Rosetta_Book_Store"/>
+		</Unit>
 		<Unit filename="C:/Users/CCK/CLionProjects/Rosetta-Book-Store/main.cpp">
 			<Option target="Rosetta_Book_Store"/>
 		</Unit>
