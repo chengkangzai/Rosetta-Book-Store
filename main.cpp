@@ -12,9 +12,11 @@ int main() {
 //    cout << bookQ->get(0).toString() << "\n";
 
 //    cout << bookQ->printAll() << "\n";
-    bookQ->del(1);
-    cout << bookQ->printAll() << "\n";
-
+//    bookQ->del(1);
+//    cout << bookQ->printAll() << "\n";
+//    cout << bookQ->where(bookQ->AUTHOR, "J. K. ROWLING").toString();
+//    cout << bookQ->where(bookQ->INDEX, 5).toString();
+    bookQ->printAll();
 
     return 0;
 }
