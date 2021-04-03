@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <utility>
+#include <cassert>
 
 #include "../Models/Book.h"
 #include "../Exception/ModalNotFoundException.h"
@@ -106,15 +107,15 @@ public:
 
     /**
      * https://stackoverflow.com/questions/25599343/remove-an-element-from-a-linked-list-in-c/51127711
-     * @param id that you wanted to delete!
+     * @param bookID that you wanted to delete!
      * @return
      */
-    BookQuery *del(int id) {
-        if (id < 0 || id >= size()) {
+    BookQuery *del(int bookID) {
+        if (bookID < 0 || bookID >= size()) {
             throw exception("Index out of bound. \n");
         }
 
-        if (id == 1) {
+        if (bookID == 1) {
             head = head->next;
             return this;
         }
@@ -122,7 +123,7 @@ public:
         BooksNode *prev = head; // empty header
         BooksNode *current = head->next; // the first valid node
         while (current != nullptr) {
-            if (current->book.id == id) {
+            if (current->book.id == bookID) {
                 break;
             } else {
                 prev = current;
@@ -140,17 +141,6 @@ public:
         return this;
     }
 
-    BookQuery *printAll() {
-        BooksNode *current = head;
-
-        while (current != nullptr) {
-            cout << current->book.toString() << "\n";
-            current = current->next;
-        }
-        delete current;
-        return this;
-    }
-
     // TODO: Sort by...
     // function to sort a singly linked list using insertion sort
     BooksNode *insertionSort() const {
@@ -163,7 +153,7 @@ public:
             // Store next for next iteration
             struct BooksNode *next = current->next;
             // insert current in sorted linked list
-            sortedInsert(&sorted, current);
+            insertForQuality(&sorted, current);
             // Update current
             current = next;
         }
@@ -201,6 +191,31 @@ public:
                 Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL", "REFERENCE", "NON-FICTION",
                      "9781577315933", 6, 78, true));
         return this;
+    }
+
+    static void test() {
+        auto bookQ = BookQuery().init();
+
+        cout << "TEST 1 : Update Record number 1 \t: ";
+        auto target = bookQ->where(bookQ->ID, 1);
+        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", "FANTASY",
+                           "FICTION", "9780747532743", 70, 76.80, true),
+                      target.id - 1);
+
+        assert(bookQ->where(bookQ->ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
+        cout << "PASSED \n";
+
+        cout << "TEST 2 : Delete Record ID 2 \t : ";
+        auto target2 = bookQ->where(bookQ->ID, 2);
+        bookQ->del(target2.id);
+        assert(bookQ->size() == 8);
+        cout << "PASSED \n";
+
+        cout << "TEST 3 : Find Record 3 \t\t\t : ";
+        auto target3 = bookQ->where(bookQ->ID, 3);
+        assert(target3.id == 3);
+        cout << "PASSED \n";
+
     }
 
 private:
@@ -278,7 +293,7 @@ private:
      * @param head_ref
      * @param new_node
      */
-    static void sortedInsert(struct BooksNode **head_ref, struct BooksNode *new_node) {
+    static void insertForQuality(struct BooksNode **head_ref, struct BooksNode *new_node) {
         struct BooksNode *current;
         /* Special case for the head end */
         if (*head_ref == nullptr || (*head_ref)->book.quantity >= new_node->book.quantity) {

@@ -37,9 +37,12 @@ public:
     }
 
     string toString() {
-
         return to_string(id) + ", " + title + ", " + author + ", " + genre + ", " + category + ", " + ISBN + ", " +
                to_string(quantity) + ", " + to_string(price) + ", " + to_string(isAvailable);
+    }
+
+    void print() {
+        cout << this->toString() << "\n";
     }
 
 private:
