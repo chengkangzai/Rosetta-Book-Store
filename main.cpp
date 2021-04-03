@@ -3,20 +3,20 @@
 
 using namespace std;
 
-int main() {
-    auto bookQ = BookQuery().init();
-//    cout << bookQ->get(0).toString() << "\n";
-//    bookQ->update(
-//            Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", "FANTASY", "FICTION", "9780747532743", 70, 76.80,
-//                 true), 0);
-//    cout << bookQ->get(0).toString() << "\n";
 
-//    cout << bookQ->printAll() << "\n";
-//    bookQ->del(1);
-//    cout << bookQ->printAll() << "\n";
-//    cout << bookQ->where(bookQ->AUTHOR, "J. K. ROWLING").toString();
-//    cout << bookQ->where(bookQ->INDEX, 5).toString();
-    bookQ->printAll();
+// Driver program to test above functions
+int main() {
+    struct Node *a = NULL;
+    auto s = BookQuery().init();
+
+
+    printf("Linked List before sorting \n");
+//    s->printAll();
+
+    s->insertionSort();
+
+    printf("\nLinked List after sorting \n");
+//    s->printAll();
 
     return 0;
 }

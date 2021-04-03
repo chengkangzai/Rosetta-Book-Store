@@ -15,20 +15,30 @@ using namespace std;
 
 class BookQuery {
 public:
-    enum QUERY_TYPE {
-        TITLE, ID, AUTHOR, INDEX
-    };
-
     struct BooksNode {
         explicit BooksNode(Book book) : book(move(book)) {
         }
 
         Book book;
         struct BooksNode *next{};
+
+        BooksNode *printNode() {
+            BooksNode *current = this;
+
+            while (current != nullptr) {
+                cout << current->book.toString() << "\n";
+                current = current->next;
+            }
+            delete current;
+            return this;
+        }
     };
 
     struct BooksNode *head = nullptr;
 
+    enum QUERY_TYPE {
+        TITLE, ID, AUTHOR, INDEX
+    };
 
     /**
      * @param TYPE Search type. Available query : TITLE,ID,AUTHOR,INDEX
@@ -90,7 +100,7 @@ public:
         for (int i = 0; i < index; i++) {
             current = current->next;
         }
-        current->book = Book(newBook);
+        current->book = Book(move(newBook));
         return this;
     }
 
@@ -127,6 +137,7 @@ public:
             prev->next = current->next; // unlink the node you remove
             delete current; // delete the node
         }
+        return this;
     }
 
     BookQuery *printAll() {
@@ -140,6 +151,25 @@ public:
         return this;
     }
 
+    // TODO: Sort by...
+    // function to sort a singly linked list using insertion sort
+    BooksNode *insertionSort() const {
+        // Initialize sorted linked list
+        struct BooksNode *sorted = nullptr;
+
+        // Traverse the given linked list and insert every BooksNode to sorted
+        struct BooksNode *current = head;
+        while (current != nullptr) {
+            // Store next for next iteration
+            struct BooksNode *next = current->next;
+            // insert current in sorted linked list
+            sortedInsert(&sorted, current);
+            // Update current
+            current = next;
+        }
+        sorted->printNode();
+        return sorted;
+    }
 
 
     BookQuery *init() {
@@ -240,6 +270,29 @@ private:
             current = current->next;
 
         return current->book;
+    }
+
+    /**
+     * https://www.geeksforgeeks.org/insertion-sort-for-singly-linked-list/
+     * function to insert a new_node in a list. Note that this function expects a pointer to head_ref as this can modify the head of the input linked list (similar to push())
+     * @param head_ref
+     * @param new_node
+     */
+    static void sortedInsert(struct BooksNode **head_ref, struct BooksNode *new_node) {
+        struct BooksNode *current;
+        /* Special case for the head end */
+        if (*head_ref == nullptr || (*head_ref)->book.quantity >= new_node->book.quantity) {
+            new_node->next = *head_ref;
+            *head_ref = new_node;
+        } else {
+            /* Locate the BooksNode before the point of insertion */
+            current = *head_ref;
+            while (current->next != nullptr && current->next->book.quantity < new_node->book.quantity) {
+                current = current->next;
+            }
+            new_node->next = current->next;
+            current->next = new_node;
+        }
     }
 };
 
