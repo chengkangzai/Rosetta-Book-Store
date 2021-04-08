@@ -120,31 +120,30 @@ public:
             return this;
         }
 
-        BooksNode *prev = head; // empty header
-        BooksNode *current = head->next; // the first valid node
+        BooksNode *prev = head;
+        BooksNode *current = head->next;
         while (current != nullptr) {
             if (current->book.id == bookID) {
                 break;
             } else {
                 prev = current;
-                current = current->next; // go to next value
+                current = current->next;
             }
         }
 
-        if (current == nullptr) { // if we reached end of list or the list is empty
-            throw exception("Can't remove value: no match found.\n");
-        } else {
-//            cout << "Deleting: " << current << "\n";
-            prev->next = current->next; // unlink the node you remove
-            delete current; // delete the node
+        if (current == nullptr) {
+            throw ModalNotFoundException("Can't remove value: no match found.\n");
         }
+
+        prev->next = current->next; // link the previous node to the next node
+        delete current;
+
         return this;
     }
 
     // TODO: Sort by...
     // function to sort a singly linked list using insertion sort
     BooksNode *insertionSort() const {
-        // Initialize sorted linked list
         struct BooksNode *sorted = nullptr;
 
         // Traverse the given linked list and insert every BooksNode to sorted
