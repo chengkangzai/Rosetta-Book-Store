@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <utility>
+#include <cassert>
 
 #include "../Models/Book.h"
 #include "../Exception/ModalNotFoundException.h"
@@ -15,20 +16,30 @@ using namespace std;
 
 class BookQuery {
 public:
-    enum QUERY_TYPE {
-        TITLE, ID, AUTHOR, INDEX
-    };
-
     struct BooksNode {
         explicit BooksNode(Book book) : book(move(book)) {
         }
 
         Book book;
         struct BooksNode *next{};
+
+        BooksNode *printNode() {
+            BooksNode *current = this;
+
+            while (current != nullptr) {
+                cout << current->book.toString() << "\n";
+                current = current->next;
+            }
+            delete current;
+            return this;
+        }
     };
 
     struct BooksNode *head = nullptr;
 
+    enum QUERY_TYPE {
+        TITLE, ID, AUTHOR, INDEX
+    };
 
     /**
      * @param TYPE Search type. Available query : TITLE,ID,AUTHOR,INDEX
@@ -90,56 +101,64 @@ public:
         for (int i = 0; i < index; i++) {
             current = current->next;
         }
-        current->book = Book(newBook);
+        current->book = Book(move(newBook));
         return this;
     }
 
     /**
      * https://stackoverflow.com/questions/25599343/remove-an-element-from-a-linked-list-in-c/51127711
-     * @param id that you wanted to delete!
+     * @param bookID that you wanted to delete!
      * @return
      */
-    BookQuery *del(int id) {
-        if (id < 0 || id >= size()) {
+    BookQuery *del(int bookID) {
+        if (bookID < 0 || bookID >= size()) {
             throw exception("Index out of bound. \n");
         }
 
-        if (id == 1) {
+        if (bookID == 1) {
             head = head->next;
             return this;
         }
 
-        BooksNode *prev = head; // empty header
-        BooksNode *current = head->next; // the first valid node
+        BooksNode *prev = head;
+        BooksNode *current = head->next;
         while (current != nullptr) {
-            if (current->book.id == id) {
+            if (current->book.id == bookID) {
                 break;
             } else {
                 prev = current;
-                current = current->next; // go to next value
+                current = current->next;
             }
         }
 
-        if (current == nullptr) { // if we reached end of list or the list is empty
-            throw exception("Can't remove value: no match found.\n");
-        } else {
-//            cout << "Deleting: " << current << "\n";
-            prev->next = current->next; // unlink the node you remove
-            delete current; // delete the node
+        if (current == nullptr) {
+            throw ModalNotFoundException("Can't remove value: no match found.\n");
         }
-    }
 
-    BookQuery *printAll() {
-        BooksNode *current = head;
-
-        while (current != nullptr) {
-            cout << current->book.toString() << "\n";
-            current = current->next;
-        }
+        prev->next = current->next; // link the previous node to the next node
         delete current;
+
         return this;
     }
 
+    // TODO: Sort by...
+    // function to sort a singly linked list using insertion sort
+    BooksNode *insertionSort() const {
+        struct BooksNode *sorted = nullptr;
+
+        // Traverse the given linked list and insert every BooksNode to sorted
+        struct BooksNode *current = head;
+        while (current != nullptr) {
+            // Store next for next iteration
+            struct BooksNode *next = current->next;
+            // insert current in sorted linked list
+            insertForQuality(&sorted, current);
+            // Update current
+            current = next;
+        }
+        sorted->printNode();
+        return sorted;
+    }
 
 
     BookQuery *init() {
@@ -171,6 +190,31 @@ public:
                 Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL", "REFERENCE", "NON-FICTION",
                      "9781577315933", 6, 78, true));
         return this;
+    }
+
+    static void test() {
+        auto bookQ = BookQuery().init();
+
+        cout << "TEST 1 : Update Record number 1 \t: ";
+        auto target = bookQ->where(bookQ->ID, 1);
+        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", "FANTASY",
+                           "FICTION", "9780747532743", 70, 76.80, true),
+                      target.id - 1);
+
+        assert(bookQ->where(bookQ->ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
+        cout << "PASSED \n";
+
+        cout << "TEST 2 : Delete Record ID 2 \t : ";
+        auto target2 = bookQ->where(bookQ->ID, 2);
+        bookQ->del(target2.id);
+        assert(bookQ->size() == 8);
+        cout << "PASSED \n";
+
+        cout << "TEST 3 : Find Record 3 \t\t\t : ";
+        auto target3 = bookQ->where(bookQ->ID, 3);
+        assert(target3.id == 3);
+        cout << "PASSED \n";
+
     }
 
 private:
@@ -240,6 +284,29 @@ private:
             current = current->next;
 
         return current->book;
+    }
+
+    /**
+     * https://www.geeksforgeeks.org/insertion-sort-for-singly-linked-list/
+     * function to insert a new_node in a list. Note that this function expects a pointer to head_ref as this can modify the head of the input linked list (similar to push())
+     * @param head_ref
+     * @param new_node
+     */
+    static void insertForQuality(struct BooksNode **head_ref, struct BooksNode *new_node) {
+        struct BooksNode *current;
+        /* Special case for the head end */
+        if (*head_ref == nullptr || (*head_ref)->book.quantity >= new_node->book.quantity) {
+            new_node->next = *head_ref;
+            *head_ref = new_node;
+        } else {
+            /* Locate the BooksNode before the point of insertion */
+            current = *head_ref;
+            while (current->next != nullptr && current->next->book.quantity < new_node->book.quantity) {
+                current = current->next;
+            }
+            new_node->next = current->next;
+            current->next = new_node;
+        }
     }
 };
 
