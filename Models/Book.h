@@ -42,16 +42,7 @@ public:
     }
 
     void print() {
-        cout << this->toString() << "\n";
-    }
-
-private:
-    string numTostring(int number) {
-        stringstream ss;
-        ss << number;
-        string str = ss.str();
-
-        return str;
+        cout << this->toString() << endl;
     }
 };
 

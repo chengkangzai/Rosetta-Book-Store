@@ -27,7 +27,7 @@ public:
             BooksNode *current = this;
 
             while (current != nullptr) {
-                cout << current->book.toString() << "\n";
+                current->book.print();
                 current = current->next;
             }
             delete current;
@@ -46,7 +46,7 @@ public:
      * @param searchQuery
      * @return
      */
-    Book where(QUERY_TYPE TYPE, string searchQuery) {
+    Book where(QUERY_TYPE TYPE, const string &searchQuery) {
         if (TYPE == TITLE)
             return this->searchByTitle(searchQuery);
         if (TYPE == ID)
@@ -69,29 +69,30 @@ public:
             return this->searchByID(searchQuery);
         if (TYPE == INDEX)
             return this->searchByIndex(searchQuery);
-        if (TYPE == AUTHOR || TYPE == TITLE) {
+        if (TYPE == AUTHOR || TYPE == TITLE)
             throw exception("QUERY_TYPE not supported ! ps: Author and TITLE with int...?");
-        }
+
         throw exception("Invalid QUERY_TYPE !");
     }
 
     BookQuery *create(Book book) {
         auto *newNode = new BooksNode(Book(move(book)));
-        newNode->next = nullptr;
 
+        //check if the book is the first one
         if (head == nullptr) {
             head = newNode;
             return this;
         }
 
         BooksNode *current = head;
+        //Go to the last one (which is null)
         while (current->next != nullptr) {
             current = current->next;
         }
+        //Connect the last one with the new Node
         current->next = newNode;
         return this;
     }
-
 
     const BookQuery *update(Book newBook, int index) const {
         if (index < 0 || index >= size()) {
@@ -114,8 +115,8 @@ public:
         if (bookID < 0 || bookID >= size()) {
             throw exception("Index out of bound. \n");
         }
-
-        if (bookID == 1) {
+        //Instead of checking it is one, check it its the first index ...
+        if (this->where(this->INDEX, 0).id == bookID) {
             head = head->next;
             return this;
         }
@@ -227,10 +228,6 @@ private:
             ptr = ptr->next;
         }
         return temp;
-    }
-
-    void commit() {
-        // TODO
     }
 
     Book searchByTitle(const string &title) const {
