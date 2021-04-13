@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-class ModalNotFoundException : std::exception {
+class ModalNotFoundException : public std::exception {
 
 public:
     ModalNotFoundException(const char *msg) : std::exception(msg) {

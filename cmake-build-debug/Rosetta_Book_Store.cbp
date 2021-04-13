@@ -82,6 +82,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/CCK/CLionProjects/Rosetta-Book-Store/Exception/InvalidQueryType.h">
+			<Option target="Rosetta_Book_Store"/>
+		</Unit>
 		<Unit filename="C:/Users/CCK/CLionProjects/Rosetta-Book-Store/Exception/ModalNotFoundException.h">
 			<Option target="Rosetta_Book_Store"/>
 		</Unit>
