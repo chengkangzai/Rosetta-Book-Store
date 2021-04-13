@@ -14,27 +14,28 @@
 
 using namespace std;
 
+class BooksNode {
+public:
+    explicit BooksNode(Book book) : book(move(book)) {
+    }
+
+    Book book;
+    struct BooksNode *next{};
+
+    BooksNode *printNode() {
+        BooksNode *current = this;
+
+        while (current != nullptr) {
+            current->book.print();
+            current = current->next;
+        }
+        delete current;
+        return this;
+    }
+};
+
 class BookQuery {
 public:
-    struct BooksNode {
-        explicit BooksNode(Book book) : book(move(book)) {
-        }
-
-        Book book;
-        struct BooksNode *next{};
-
-        BooksNode *printNode() {
-            BooksNode *current = this;
-
-            while (current != nullptr) {
-                current->book.print();
-                current = current->next;
-            }
-            delete current;
-            return this;
-        }
-    };
-
     struct BooksNode *head = nullptr;
 
     enum QUERY_TYPE {
@@ -49,10 +50,10 @@ public:
     Book where(QUERY_TYPE TYPE, const string &searchQuery) {
         if (TYPE == TITLE)
             return this->searchByTitle(searchQuery);
-        if (TYPE == ID)
-            return this->searchByID(stoi(searchQuery));
         if (TYPE == AUTHOR)
             return this->searchByAuthor(searchQuery);
+        if (TYPE == ID)
+            return this->searchByID(stoi(searchQuery));
         if (TYPE == INDEX)
             return this->searchByIndex(stoi(searchQuery));
 
@@ -231,7 +232,7 @@ private:
     }
 
     Book searchByTitle(const string &title) const {
-        struct BooksNode *current = head;
+        BooksNode *current = head;
 
         while (current != nullptr) {
             if (current->book.title == title) {
@@ -245,7 +246,7 @@ private:
     }
 
     Book searchByAuthor(const string &author) const {
-        struct BooksNode *current = head;
+        BooksNode *current = head;
 
         while (current != nullptr) {
             if (current->book.author == author) {
@@ -259,7 +260,7 @@ private:
     }
 
     Book searchByID(int id) const {
-        struct BooksNode *current = head;
+        BooksNode *current = head;
 
         while (current != nullptr) {
             if (current->book.id == id) {
