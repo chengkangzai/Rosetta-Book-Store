@@ -11,11 +11,14 @@
 
 #include "../Models/Book.h"
 #include "../Exception/ModalNotFoundException.h"
+#include "../Exception/InvalidQueryType.h"
 
 using namespace std;
 
 class BooksNode {
 public:
+    BooksNode() = default;
+
     explicit BooksNode(Book book) : book(move(book)) {
     }
 
@@ -25,12 +28,29 @@ public:
     BooksNode *printNode() {
         BooksNode *current = this;
 
+        if (current == nullptr) {
+            cout << "NULL";
+            return this;
+        }
+
         while (current != nullptr) {
             current->book.print();
             current = current->next;
         }
         delete current;
         return this;
+    }
+
+    int size() {
+        BooksNode *ptr = this;
+        int temp = 0;
+
+        while (ptr != nullptr) {
+            temp++;
+            ptr = ptr->next;
+        }
+
+        return temp;
     }
 };
 
@@ -39,41 +59,42 @@ public:
     struct BooksNode *head = nullptr;
 
     enum QUERY_TYPE {
-        TITLE, ID, AUTHOR, INDEX
+        TITLE, ID, AUTHOR, INDEX, CATEGORY, GENRE
     };
 
-    /**
-     * @param TYPE Search type. Available query : TITLE,ID,AUTHOR,INDEX
-     * @param searchQuery
-     * @return
-     */
-    Book where(QUERY_TYPE TYPE, const string &searchQuery) {
+
+    BooksNode *wheres(QUERY_TYPE TYPE, const string &searchQuery) {
         if (TYPE == TITLE)
             return this->searchByTitle(searchQuery);
         if (TYPE == AUTHOR)
             return this->searchByAuthor(searchQuery);
-        if (TYPE == ID)
-            return this->searchByID(stoi(searchQuery));
-        if (TYPE == INDEX)
-            return this->searchByIndex(stoi(searchQuery));
 
-        throw exception("Invalid QUERY_TYPE !");
+        throw InvalidQueryType("Invalid QUERY_TYPE !");
     }
 
-    /**
-     * @param TYPE Search type. Available query : ID,INDEX
-     * @param searchQuery
-     * @return
-     */
+    BooksNode *wheres(QUERY_TYPE TYPE, enum Book::CATEGORY searchQuery) {
+        if (TYPE == CATEGORY)
+            return this->searchByCategory(searchQuery);
+
+        throw InvalidQueryType("Invalid QUERY_TYPE !");
+    }
+
+    BooksNode *wheres(QUERY_TYPE TYPE, enum Book::GENRE searchQuery) {
+        if (TYPE == GENRE)
+            return this->searchByGenre(searchQuery);
+
+        throw InvalidQueryType("Invalid QUERY_TYPE !");
+    }
+
     Book where(QUERY_TYPE TYPE, int searchQuery) {
         if (TYPE == ID)
             return this->searchByID(searchQuery);
         if (TYPE == INDEX)
             return this->searchByIndex(searchQuery);
-        if (TYPE == AUTHOR || TYPE == TITLE)
-            throw exception("QUERY_TYPE not supported ! ps: Author and TITLE with int...?");
+        if (TYPE == AUTHOR || TYPE == TITLE || TYPE == CATEGORY)
+            throw InvalidQueryType("QUERY_TYPE not supported ! ps: Author and TITLE with int...?");
 
-        throw exception("Invalid QUERY_TYPE !");
+        throw InvalidQueryType("Invalid QUERY_TYPE !");
     }
 
     BookQuery *create(Book book) {
@@ -96,7 +117,7 @@ public:
     }
 
     const BookQuery *update(Book newBook, int index) const {
-        if (index < 0 || index >= size()) {
+        if (index < 0 || index >= head->size()) {
             throw exception("Index out of bound. \n");
         }
         BooksNode *current = head;
@@ -113,7 +134,7 @@ public:
      * @return
      */
     BookQuery *del(int bookID) {
-        if (bookID < 0 || bookID >= size()) {
+        if (bookID < 0 || bookID >= head->size()) {
             throw exception("Index out of bound. \n");
         }
         //Instead of checking it is one, check it its the first index ...
@@ -164,99 +185,163 @@ public:
 
 
     BookQuery *init() {
-        this->create(
-                Book(1, "HARRY POTTER", "J. K. ROWLING", "FANTASY", "FICTION",
-                     "9780747532743", 50, 56.80, true));
-        this->create(
-                Book(2, "MEIN KAMPF", "ADOLF HITLER", "HISTORICAL", "FICTION",
-                     "9780395925034", 5, 120.50, false));
-        this->create(
-                Book(3, "13 REASONS WHY", "JAY ASHER", "REALISTIC", "FICTION",
-                     "9780451479327", 3, 63.2, true));
-        this->create(
-                Book(4, "THE INVISIBLE MAN", "H. G. WELLS", "SCIENCE", "FICTION",
-                     "9781512091977", 5, 30.45, true));
-        this->create(
-                Book(5, "THE HUNGER GAMES", "SUZANNE COLLINS", "NARRATIVE", "NON-FICTION",
-                     "9780439023481", 9, 124.41, true));
-        this->create(
-                Book(6, "I HAVE A DREAM", "MARTIN LUTHER KING JR.", "BIOGRAPHY", "NON-FICTION",
-                     "9780375858871", 30, 100, true));
-        this->create(
-                Book(7, "CRIME AND PERIODICALS", "NOVA EVERLY", "PERIODICALS", "NON-FICTION",
-                     "9781949202076", 2, 35.9, true));
-        this->create(
-                Book(8, "A NEW EARTH", "ECKHART TOLLE", "SELF-HELP", "NON-FICTION",
-                     "9780452289963", 10, 15, true));
-        this->create(
-                Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL", "REFERENCE", "NON-FICTION",
-                     "9781577315933", 6, 78, true));
+        this->create(Book(1, "HARRY POTTER", "J. K. ROWLING",
+                          Book::FANTASY, Book::FICTION,
+                          "9780747532743", 50, 56.80, true));
+        this->create(Book(2, "MEIN KAMPF", "ADOLF HITLER",
+                          Book::HISTORICAL, Book::FICTION,
+                          "9780395925034", 5, 120.50, false));
+        this->create(Book(3, "13 REASONS WHY", "JAY ASHER",
+                          Book::REALISTIC, Book::FICTION,
+                          "9780451479327", 3, 63.20, true));
+        this->create(Book(4, "THE INVISIBLE MAN", "H. G. WELLS",
+                          Book::SCIENCE, Book::FICTION,
+                          "9781512091977", 5, 30.45, true));
+        this->create(Book(5, "THE HUNGER GAMES", "SUZANNE COLLINS",
+                          Book::NARRATIVE, Book::NON_FICTION,
+                          "9780439023481", 9, 124.41, true));
+        this->create(Book(6, "I HAVE A DREAM", "MARTIN LUTHER KING JR.",
+                          Book::BIOGRAPHY, Book::NON_FICTION,
+                          "9780375858871", 30, 100.00, true));
+        this->create(Book(7, "CRIME AND PERIODICALS", "NOVA EVERLY",
+                          Book::PERIODICALS, Book::NON_FICTION,
+                          "9781949202076", 2, 35.9, true));
+        this->create(Book(8, "A NEW EARTH", "ECKHART TOLLE",
+                          Book::SELF_HELP, Book::NON_FICTION,
+                          "9780452289963", 10, 15.00, true));
+        this->create(Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL",
+                          Book::REFERENCE, Book::NON_FICTION,
+                          "9781577315933", 6, 78.00, true));
         return this;
     }
 
     static void test() {
         auto bookQ = BookQuery().init();
 
-        cout << "TEST 1 : Update Record number 1 \t: ";
+        cout << "TEST 1 : Update Record number 1 \t\t\t\t\t: ";
         auto target = bookQ->where(bookQ->ID, 1);
-        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", "FANTASY",
-                           "FICTION", "9780747532743", 70, 76.80, true),
+        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
+                           Book::FICTION, "9780747532743", 70, 76.80, true),
                       target.id - 1);
 
         assert(bookQ->where(bookQ->ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
         cout << "PASSED \n";
 
-        cout << "TEST 2 : Delete Record ID 2 \t : ";
+        cout << "TEST 2 : Delete Record ID 2 \t\t\t\t\t\t: ";
         auto target2 = bookQ->where(bookQ->ID, 2);
         bookQ->del(target2.id);
-        assert(bookQ->size() == 8);
+        assert(bookQ->head->size() == 8);
         cout << "PASSED \n";
 
-        cout << "TEST 3 : Find Record 3 \t\t\t : ";
+        cout << "TEST 3 : Find Record 3 \t\t\t\t\t\t\t\t: ";
         auto target3 = bookQ->where(bookQ->ID, 3);
         assert(target3.id == 3);
         cout << "PASSED \n";
 
+        cout << "TEST 4 : Duplicate Record 4 for finding purpose \t: ";
+        auto result4 = bookQ->wheres(bookQ->CATEGORY, bookQ->where(bookQ->ID, 4).category);
+        assert(result4->size() == 3);
+        cout << "PASSED \n";
     }
 
 private:
-    int size() const {
-        struct BooksNode *ptr = head;
-        int temp = 0;
-
-        while (ptr != nullptr) {
-            temp++;
-            ptr = ptr->next;
-        }
-        return temp;
-    }
-
-    Book searchByTitle(const string &title) const {
+    BooksNode *searchByTitle(const string &title) const {
+        struct BooksNode *result = nullptr;
         BooksNode *current = head;
 
         while (current != nullptr) {
             if (current->book.title == title) {
-                return current->book;
-            } else {
-                current = current->next;
+                auto newNode = new BooksNode(current->book);
+                if (result == nullptr) {
+                    result = newNode;
+                } else {
+                    struct BooksNode *temp = result;
+                    while (temp->next != nullptr) {
+                        temp = temp->next;
+                    }
+                    temp->next = newNode;
+                }
             }
+            current = current->next; // move through list
         }
-
-        throw ModalNotFoundException("Modal (Book) with search query of: title");
+        return (result == nullptr || result->size() <= 0)
+               ? throw ModalNotFoundException("Book with search query : title are not Found")
+               : result;
     }
 
-    Book searchByAuthor(const string &author) const {
+    BooksNode *searchByAuthor(const string &author) const {
+        struct BooksNode *result = nullptr;
         BooksNode *current = head;
 
         while (current != nullptr) {
             if (current->book.author == author) {
-                return current->book;
-            } else {
-                current = current->next;
+                auto newNode = new BooksNode(current->book);
+                if (result == nullptr) {
+                    result = newNode;
+                } else {
+                    struct BooksNode *temp = result;
+                    while (temp->next != nullptr) {
+                        temp = temp->next;
+                    }
+                    temp->next = newNode;
+                }
             }
+            current = current->next; // move through list
         }
 
-        throw ModalNotFoundException("Modal (Book) with search query of: author");
+        return (result == nullptr || result->size() <= 0)
+               ? throw ModalNotFoundException("Book with search query : author are not Found")
+               : result;
+    }
+
+    BooksNode *searchByCategory(enum Book::CATEGORY &category) const {
+        struct BooksNode *result = nullptr;
+        BooksNode *current = head;
+
+        while (current != nullptr) {
+            if (current->book.category == category) {
+                auto newNode = new BooksNode(current->book);
+                if (result == nullptr) {
+                    result = newNode;
+                } else {
+                    struct BooksNode *temp = result;
+                    while (temp->next != nullptr) {
+                        temp = temp->next;
+                    }
+                    temp->next = newNode;
+                }
+            }
+            current = current->next; // move through list
+        }
+
+        return (result == nullptr || result->size() <= 0)
+               ? throw ModalNotFoundException("Book with search query : CATEGORY are not Found")
+               : result;
+    }
+
+    BooksNode *searchByGenre(enum Book::GENRE &genre) const {
+        struct BooksNode *result = nullptr;
+        BooksNode *current = head;
+
+        while (current != nullptr) {
+            if (current->book.genre == genre) {
+                auto newNode = new BooksNode(current->book);
+                if (result == nullptr) {
+                    result = newNode;
+                } else {
+                    struct BooksNode *temp = result;
+                    while (temp->next != nullptr) {
+                        temp = temp->next;
+                    }
+                    temp->next = newNode;
+                }
+            }
+            current = current->next; // move through list
+        }
+
+        return (result == nullptr || result->size() <= 0)
+               ? throw ModalNotFoundException("Book with search query : GENRE are not Found")
+               : result;
     }
 
     Book searchByID(int id) const {
@@ -274,7 +359,7 @@ private:
     }
 
     Book searchByIndex(int index) const {
-        if (index < 0 || index >= size()) {
+        if (index < 0 || index >= head->size()) {
             throw exception("Index out of bound. \n");
         }
         BooksNode *current = head;
