@@ -179,10 +179,8 @@ public:
             // Update current
             current = next;
         }
-        sorted->printNode();
         return sorted;
     }
-
 
     BookQuery *init() {
         this->create(Book(1, "HARRY POTTER", "J. K. ROWLING",
@@ -371,24 +369,23 @@ private:
 
     /**
      * https://www.geeksforgeeks.org/insertion-sort-for-singly-linked-list/
-     * function to insert a new_node in a list. Note that this function expects a pointer to head_ref as this can modify the head of the input linked list (similar to push())
-     * @param head_ref
-     * @param new_node
+     * function to insert a current in a list. Note that this function expects a pointer to sorted as this can modify the head of the input linked list (similar to push())
+     * @param sorted
+     * @param current
      */
-    static void insertForQuality(struct BooksNode **head_ref, struct BooksNode *new_node) {
-        struct BooksNode *current;
+    static void insertForQuality(struct BooksNode **sorted, struct BooksNode *current) {
         /* Special case for the head end */
-        if (*head_ref == nullptr || (*head_ref)->book.quantity >= new_node->book.quantity) {
-            new_node->next = *head_ref;
-            *head_ref = new_node;
+        if (*sorted == nullptr || (*sorted)->book.quantity >= current->book.quantity) {
+            current->next = *sorted;
+            *sorted = current;
         } else {
             /* Locate the BooksNode before the point of insertion */
-            current = *head_ref;
-            while (current->next != nullptr && current->next->book.quantity < new_node->book.quantity) {
-                current = current->next;
+            BooksNode *temp = *sorted;
+            while (temp->next != nullptr && temp->next->book.quantity < current->book.quantity) {
+                temp = temp->next;
             }
-            new_node->next = current->next;
-            current->next = new_node;
+            current->next = temp->next;
+            temp->next = current;
         }
     }
 };
