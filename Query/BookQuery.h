@@ -293,7 +293,7 @@ private:
     }
 
     BooksNode *searchByCategory(enum Book::CATEGORY &category) const {
-        struct BooksNode *result = nullptr;
+        BooksNode *result = nullptr;
         BooksNode *current = head;
 
         while (current != nullptr) {
