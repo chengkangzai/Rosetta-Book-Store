@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/CCK/CLionProjects/Rosetta-Book-Store/main.cpp" "C:/Users/CCK/CLionProjects/Rosetta-Book-Store/cmake-build-debug/CMakeFiles/Rosetta_Book_Store.dir/main.cpp.obj"
+  "/Users/cck/CLionProjects/Rosetta-Book-Store/main.cpp" "/Users/cck/CLionProjects/Rosetta-Book-Store/cmake-build-debug/CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "MSVC")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

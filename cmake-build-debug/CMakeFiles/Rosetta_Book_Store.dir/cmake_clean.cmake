@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Rosetta_Book_Store.dir/main.cpp.obj"
-  "Rosetta_Book_Store.exe"
-  "Rosetta_Book_Store.exe.manifest"
-  "Rosetta_Book_Store.lib"
+  "CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o"
+  "Rosetta_Book_Store"
   "Rosetta_Book_Store.pdb"
 )
 

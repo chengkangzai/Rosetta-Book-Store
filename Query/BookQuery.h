@@ -118,7 +118,7 @@ public:
 
     const BookQuery *update(Book newBook, int index) const {
         if (index < 0 || index >= head->size()) {
-            throw exception("Index out of bound. \n");
+            throw ("Index out of bound. \n");
         }
         BooksNode *current = head;
         for (int i = 0; i < index; i++) {
@@ -135,7 +135,7 @@ public:
      */
     BookQuery *del(int bookID) {
         if (bookID < 0 || bookID >= head->size()) {
-            throw exception("Index out of bound. \n");
+            throw ("Index out of bound. \n");
         }
         //Instead of checking it is one, check it its the first index ...
         if (this->where(this->INDEX, 0).id == bookID) {
@@ -358,7 +358,7 @@ private:
 
     Book searchByIndex(int index) const {
         if (index < 0 || index >= head->size()) {
-            throw exception("Index out of bound. \n");
+            throw ("Index out of bound. \n");
         }
         BooksNode *current = head;
         for (int i = 0; i < index; i++)
