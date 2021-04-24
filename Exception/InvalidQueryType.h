@@ -16,8 +16,6 @@ public:
 
     /** Constructor (C++ STL string, int, int).
      *  @param msg The error message
-     *  @param err_num Error number
-     *  @param err_off Error offset
      */
     explicit
     InvalidQueryType(const std::string &msg) :

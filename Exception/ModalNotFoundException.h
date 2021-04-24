@@ -6,6 +6,7 @@
 #define ROSETTA_BOOK_STORE_MODALNOTFOUNDEXCEPTION_H
 
 #include <iostream>
+
 //https://riptutorial.com/cplusplus/example/23640/custom-exception
 class ModalNotFoundException : virtual public std::exception {
 
@@ -16,8 +17,6 @@ public:
 
     /** Constructor (C++ STL string, int, int).
      *  @param msg The error message
-     *  @param err_num Error number
-     *  @param err_off Error offset
      */
     explicit
     ModalNotFoundException(const std::string &msg) :
