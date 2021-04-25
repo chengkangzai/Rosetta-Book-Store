@@ -139,10 +139,11 @@ private:
      */
     stack <Purchase> reverseThisStack() {
         stack <Purchase> tempStack;
+        auto current = purchaseStack;
 
-        while (!purchaseStack.empty()) {
-            auto item = purchaseStack.top();
-            purchaseStack.pop();
+        while (!current.empty()) {
+            auto item = current.top();
+            current.pop();
             tempStack.push(item);
         }
         return tempStack;
