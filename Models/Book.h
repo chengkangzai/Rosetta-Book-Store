@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "../Exception/InvalidInput.h"
 
 using namespace std;
 
@@ -88,6 +89,99 @@ public:
 
     void print() {
         cout << this->toString() << endl;
+    }
+
+    Book getFromCli() {
+        cout << "Enter Title" << endl;
+        getline(cin, this->title, '\n');
+        fflush(stdout);
+
+        cout << "Enter id" << endl;
+        cin >> this->id;
+        cin.ignore();
+        fflush(stdout);
+
+        cout << "Enter Author" << endl;
+        getline(cin, this->author, '\n');
+
+
+        cout << "Pick a Genre" << endl
+             << "1. FANTASY" << endl                        ß
+             << "2. HISTORICAL" << endl
+             << "3. REALISTIC" << endl
+             << "4. SCIENCE" << endl
+             << "5. NARRATIVE" << endl
+             << "6. BIOGRAPHY" << endl
+             << "7. PERIODICALS" << endl
+             << "8. SELF_HELP" << endl
+             << "9. REFERENCE" << endl;
+        int genreTemp;
+        cin >> genreTemp;
+        switch (genreTemp) {
+            case 1:
+                this->genre = Book::FANTASY;
+                break;
+            case 2:
+                this->genre = Book::HISTORICAL;
+                break;
+            case 3:
+                this->genre = Book::REALISTIC;
+                break;
+            case 4:
+                this->genre = Book::SCIENCE;
+                break;
+            case 5:
+                this->genre = Book::NARRATIVE;
+                break;
+            case 6:
+                this->genre = Book::BIOGRAPHY;
+                break;
+            case 7:
+                this->genre = Book::PERIODICALS;
+                break;
+            case 8:
+                this->genre = Book::SELF_HELP;
+                break;
+            case 9:
+                this->genre = Book::REFERENCE;
+                break;
+            default:
+                throw InvalidInput("Invalid Input");
+        }
+
+        cout << "Pick a Category" << endl
+             << "1. NON_FICTION" << endl
+             << "2. FICTION" << endl;
+        int categoryTemp;
+        cin >> categoryTemp;
+        switch (categoryTemp) {
+            case 1:
+                this->category = Book::NON_FICTION;
+                break;
+            case 2:
+                this->category = Book::FICTION;
+                break;
+            default:
+                throw InvalidInput("Invalid Input");
+        }
+
+        cout << "Enter ISBN " << endl;
+        cin >> this->ISBN;
+
+        int quantityTemp = 1;
+        cout << "Enter Quantity" << endl;
+        cin >> quantityTemp;
+        this->quantity = quantityTemp;
+
+        cout << "Enter price" << endl;
+        cin >> this->price;
+
+        int availTemp;
+        cout << "Available ? 1. Yes 2. No";
+        cin >> availTemp;
+        this->isAvailable = availTemp == 1;
+
+        return *this;
     }
 };
 

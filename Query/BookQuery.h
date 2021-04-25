@@ -182,7 +182,7 @@ public:
         return sorted;
     }
 
-    BookQuery *init() {
+    BookQuery init() {
         this->create(Book(1, "HARRY POTTER", "J. K. ROWLING",
                           Book::FANTASY, Book::FICTION,
                           "9780747532743", 50, 56.80, true));
@@ -210,33 +210,33 @@ public:
         this->create(Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL",
                           Book::REFERENCE, Book::NON_FICTION,
                           "9781577315933", 6, 78.00, true));
-        return this;
+        return *this;
     }
 
     static void test() {
         auto bookQ = BookQuery().init();
 
         cout << "TEST 1 : Update Record number 1 \t\t\t\t\t: ";
-        auto target = bookQ->where(bookQ->ID, 1);
-        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
+        auto target = bookQ.where(bookQ.ID, 1);
+        bookQ.update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
                            Book::FICTION, "9780747532743", 70, 76.80, true),
                       target.id - 1);
-        assert(bookQ->where(BookQuery::ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
+        assert(bookQ.where(BookQuery::ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
         cout << "PASSED \n";
 
         cout << "TEST 2 : Delete Record ID 2 \t\t\t\t\t\t: ";
-        auto target2 = bookQ->where(BookQuery::ID, 2);
-        bookQ->del(target2.id);
-        assert(bookQ->head->size() == 8);
+        auto target2 = bookQ.where(BookQuery::ID, 2);
+        bookQ.del(target2.id);
+        assert(bookQ.head->size() == 8);
         cout << "PASSED \n";
 
         cout << "TEST 3 : Find Record 3 \t\t\t\t\t\t\t\t: ";
-        assert(bookQ->where(bookQ->ID, 3).id == 3);
+        assert(bookQ.where(bookQ.ID, 3).id == 3);
         cout << "PASSED \n";
 
         cout << "TEST 4 : Duplicate Record 4 by Category purpose \t: ";
-        assert(bookQ->wheres(BookQuery::CATEGORY, Book::FICTION)->size() == 3);
-        assert(bookQ->wheres(BookQuery::CATEGORY, Book::NON_FICTION)->size() == 5);
+        assert(bookQ.wheres(BookQuery::CATEGORY, Book::FICTION)->size() == 3);
+        assert(bookQ.wheres(BookQuery::CATEGORY, Book::NON_FICTION)->size() == 5);
         cout << "PASSED \n";
     }
 

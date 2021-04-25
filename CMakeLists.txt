@@ -10,4 +10,6 @@ add_executable(
         Models/Book.h
         Exception/ModalNotFoundException.h
         Exception/InvalidQueryType.h
-        Models/Purchase.h Query/PurchaseQuery.h)
+        Models/Purchase.h
+        Query/PurchaseQuery.h
+        Exception/InvalidInput.h)

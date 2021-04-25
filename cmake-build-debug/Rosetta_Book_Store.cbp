@@ -80,6 +80,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/cck/CLionProjects/Rosetta-Book-Store/Exception/InvalidInput.h">
+			<Option target="Rosetta_Book_Store"/>
+		</Unit>
 		<Unit filename="/Users/cck/CLionProjects/Rosetta-Book-Store/Exception/InvalidQueryType.h">
 			<Option target="Rosetta_Book_Store"/>
 		</Unit>

@@ -95,50 +95,50 @@ public:
         return current;
     }
 
-    PurchaseQuery *init() {
+    PurchaseQuery init() {
         auto books = BookQuery().init();
         this->create(
-                Purchase(1, 1, books->where(books->ID, 1),
+                Purchase(1, 1, books.where(BookQuery::ID, 1),
                          Purchase::NORMAL_CUSTOMER, Purchase::CASH)
         );
         this->create(
-                Purchase(2, 200, books->where(books->ID, 2),
+                Purchase(2, 200, books.where(BookQuery::ID, 2),
                          Purchase::WHOLESALE, Purchase::E_WALLET)
         );
         this->create(
-                Purchase(3, 20, books->where(books->ID, 4),
+                Purchase(3, 20, books.where(BookQuery::ID, 4),
                          Purchase::MEMBER, Purchase::ONLINE_BANKING)
         );
         this->create(
-                Purchase(4, 5, books->where(books->ID, 4),
+                Purchase(4, 5, books.where(BookQuery::ID, 4),
                          Purchase::MEMBER, Purchase::E_WALLET)
         );
         this->create(
-                Purchase(5, 1, books->where(books->ID, 2),
+                Purchase(5, 1, books.where(BookQuery::ID, 2),
                          Purchase::NORMAL_CUSTOMER, Purchase::CASH)
         );
-        return this;
+        return *this;
     }
 
     static void test() {
         cout << "TEST 1 : Creating test data \t\t\t\t\t\t: ";
-        assert(PurchaseQuery().init()->purchaseStack.size() == 5);
+        assert(PurchaseQuery().init().purchaseStack.size() == 5);
         cout << "PASSED \n";
 
         cout << "TEST 2 : Get Record number 1 \t\t\t\t\t\t: ";
-        assert(PurchaseQuery().init()->where(PurchaseQuery::ID, 1).id == 1);
+        assert(PurchaseQuery().init().where(PurchaseQuery::ID, 1).id == 1);
         cout << "PASSED \n";
 
         cout << "TEST 3 : Get Multiple Record for Payment Type \t\t: ";
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::CASH).size() == 2);
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::E_WALLET).size() == 2);
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::ONLINE_BANKING).size() == 1);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::CASH).size() == 2);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::E_WALLET).size() == 2);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::ONLINE_BANKING).size() == 1);
         cout << "PASSED \n";
 
         cout << "TEST 4 : Get Multiple Record for Customer Type \t\t: ";
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::NORMAL_CUSTOMER).size() == 2);
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::MEMBER).size() == 2);
-        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::WHOLESALE).size() == 1);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::NORMAL_CUSTOMER).size() == 2);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::MEMBER).size() == 2);
+        assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::WHOLESALE).size() == 1);
         cout << "PASSED \n";
     }
 
