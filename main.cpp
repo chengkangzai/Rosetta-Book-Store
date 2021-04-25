@@ -5,13 +5,8 @@
 using namespace std;
 
 int main() {
-//    BookQuery::test();
-
-    auto current = PurchaseQuery().init()->sortByTotalPrice();
-
-    while (!current.empty()) {
-        current.top().print();
-        current.pop();
-    }
+    BookQuery::test();
+    cout << "------------------------------------------------------------\n";
+    PurchaseQuery::test();
     return 0;
 }

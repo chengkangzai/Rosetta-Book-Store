@@ -236,9 +236,9 @@ public:
         assert(target3.id == 3);
         cout << "PASSED \n";
 
-        cout << "TEST 4 : Duplicate Record 4 for finding purpose \t: ";
-        auto result4 = bookQ->wheres(bookQ->CATEGORY, bookQ->where(bookQ->ID, 4).category);
-        assert(result4->size() == 3);
+        cout << "TEST 4 : Duplicate Record 4 by Category purpose \t: ";
+        assert(bookQ->wheres(bookQ->CATEGORY, Book::FICTION)->size() == 3);
+        assert(bookQ->wheres(bookQ->CATEGORY, Book::NON_FICTION)->size() == 5);
         cout << "PASSED \n";
     }
 

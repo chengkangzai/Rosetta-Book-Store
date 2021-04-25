@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <stack>
+#include <cassert>
 
 #include "../Models/Purchase.h"
 #include "../Query/BookQuery.h"
@@ -71,19 +72,6 @@ public:
     }
 
 
-    PurchaseQuery *test() {
-        auto book = BookQuery().init()->where(BookQuery::ID, 1);
-        this->purchaseStack.push(Purchase(1, 200, book, Purchase::NORMAL_CUSTOMER, Purchase::CASH));
-        this->purchaseStack.push(Purchase(1, 200, book, Purchase::NORMAL_CUSTOMER, Purchase::CASH));
-        this->purchaseStack.push(Purchase(1, 200, book, Purchase::NORMAL_CUSTOMER, Purchase::CASH));
-
-        while (!this->purchaseStack.empty()) {
-            this->purchaseStack.top().print();
-            this->purchaseStack.pop();
-        }
-        return this;
-    }
-
     /**
      * https://www.codespeedy.com/sorting-a-stack-using-stl-in-cpp/
      * @return
@@ -132,6 +120,28 @@ public:
         return this;
     }
 
+    static void test() {
+        cout << "TEST 1 : Creating test data \t\t\t\t\t\t: ";
+        assert(PurchaseQuery().init()->purchaseStack.size() == 5);
+        cout << "PASSED \n";
+
+        cout << "TEST 2 : Get Record number 1 \t\t\t\t\t\t: ";
+        assert(PurchaseQuery().init()->where(PurchaseQuery::ID, 1).id == 1);
+        cout << "PASSED \n";
+
+        cout << "TEST 3 : Get Multiple Record for Payment Type \t\t: ";
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::CASH).size() == 2);
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::E_WALLET).size() == 2);
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::ONLINE_BANKING).size() == 1);
+        cout << "PASSED \n";
+
+        cout << "TEST 4 : Get Multiple Record for Customer Type \t\t: ";
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::NORMAL_CUSTOMER).size() == 2);
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::MEMBER).size() == 2);
+        assert(PurchaseQuery().init()->wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::WHOLESALE).size() == 1);
+        cout << "PASSED \n";
+    }
+
 private:
     /**
      * https://stackoverflow.com/questions/15648313/how-to-reverse-a-stack
@@ -151,47 +161,64 @@ private:
 
     Purchase findByID(int id) {
         stack <Purchase> tempStack;
+
         while (!purchaseStack.empty()) {
             if (purchaseStack.top().id == id)
                 return purchaseStack.top();
             else
                 purchaseStack.pop();
         }
+        throw ModalNotFoundException("There is no modal found");
     }
 
     stack <Purchase> findByBookId(int id) {
         stack <Purchase> tempStack;
+
         while (!purchaseStack.empty()) {
             auto item = purchaseStack.top();
             if (item.book.id == id)
                 tempStack.push(item);
             purchaseStack.pop();
         }
+
         if (tempStack.empty()) {
             throw ModalNotFoundException("There is no modal found");
         }
+
         return tempStack;
     }
 
     stack <Purchase> findByPaymentType(Purchase::PAYMENT_TYPE paymentType) {
         stack <Purchase> tempStack;
+
         while (!purchaseStack.empty()) {
             auto item = purchaseStack.top();
             if (item.paymentType == paymentType)
                 tempStack.push(item);
             purchaseStack.pop();
         }
+
+        if (tempStack.empty()) {
+            throw ModalNotFoundException("There is no modal found");
+        }
+
         return tempStack;
     }
 
     stack <Purchase> findByCustomerType(Purchase::CUSTOMER_TYPE customerType) {
         stack <Purchase> tempStack;
+
         while (!purchaseStack.empty()) {
             auto item = purchaseStack.top();
             if (item.customerType == customerType)
                 tempStack.push(item);
             purchaseStack.pop();
         }
+
+        if (tempStack.empty()) {
+            throw ModalNotFoundException("There is no modal found");
+        }
+
         return tempStack;
     }
 };
