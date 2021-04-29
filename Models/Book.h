@@ -30,7 +30,7 @@ public:
     string ISBN{};
     int quantity{};
     double price{};
-    bool isAvailable{};
+
 
     Book() {
 
@@ -46,13 +46,13 @@ public:
         this->ISBN = std::move(ISBN);
         this->quantity = quantity;
         this->price = price;
-        this->isAvailable = isAvailable;
+        this->_isAvailable = isAvailable;
     }
 
     string toString() {
-        return to_string(id) + ", " + title + ", " + author + ", " + this->getGenre(genre) + ", " +
-               this->getCategory(category) + ", " + ISBN + ", " +
-               to_string(quantity) + ", " + to_string(price) + ", " + to_string(isAvailable);
+        return "[Book] id: "+to_string(id) + " | Title: " + title + " | Author: " + author + " | " + this->getGenre(genre) + " | " +
+               this->getCategory(category) + " | ISBN: " + ISBN + " | Qty: " +
+               to_string(quantity) + " | Price: " + to_string(price) + " | Available ? " + this->isAvailable();
     }
 
     const char *getGenre(enum GENRE enumGenre) {
@@ -86,6 +86,18 @@ public:
                 return "FICTION";
         }
     }
+    /**
+     * Ternary Operator ... more marks ?
+     * @return
+     */
+    string isAvailable() {
+//        if (this->_isAvailable == true) {
+//            return "Yes";
+//        } else {
+//            return "No";
+//        }
+        return this->_isAvailable ? "Yes" : "No";
+    }
 
     void print() {
         cout << this->toString() << endl;
@@ -106,7 +118,7 @@ public:
 
 
         cout << "Pick a Genre" << endl
-             << "1. FANTASY" << endl                        ß
+             << "1. FANTASY" << endl
              << "2. HISTORICAL" << endl
              << "3. REALISTIC" << endl
              << "4. SCIENCE" << endl
@@ -179,10 +191,13 @@ public:
         int availTemp;
         cout << "Available ? 1. Yes 2. No";
         cin >> availTemp;
-        this->isAvailable = availTemp == 1;
+        this->_isAvailable = availTemp == 1;
 
         return *this;
     }
+
+private:
+    bool _isAvailable{};
 };
 
 
