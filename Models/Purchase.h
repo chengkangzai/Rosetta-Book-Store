@@ -47,13 +47,16 @@ public:
     }
 
     string toString() {
-        return to_string(this->id) + ", " + to_string(this->quantity) + ", " + to_string(this->totalPrice) + ", " +
-               this->getCustomerType(this->customerType) + ", " + this->getPaymentType(this->paymentType) + ", \n\t" +
-               this->book.toString();
+        return "[Purchase] id: " + to_string(this->id) +
+               " | Qty: " + to_string(this->quantity) +
+               " | Price: " + to_string(this->totalPrice) +
+               " | Customer type: " + this->getCustomerType(this->customerType) +
+               " | Payment type: " + this->getPaymentType(this->paymentType);
     }
 
     void print() {
-        cout << this->toString() + "\n";
+        cout << this->toString() << endl << " \t";
+        this->book.print();
     }
 
     const char *getPaymentType(enum PAYMENT_TYPE paymentType) {
@@ -170,7 +173,7 @@ public:
                            : this->customerType == MEMBER
                              ? (book.price * quantity) * 95 / 100
                              : book.price * quantity;
-
+        return *this;
     }
 
 

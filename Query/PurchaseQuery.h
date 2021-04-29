@@ -27,24 +27,24 @@ public:
         return this;
     }
 
-    PurchaseQuery *printAll() {
-        auto current = this->purchaseStack;
-
-        while (!current.empty()) {
-            current.top().print();
-            current.pop();
-        }
-        return this;
+    /**
+     * Print Purchase descending
+     * @return
+     */
+    PurchaseQuery *printDesc() {
+        if (this->purchaseStack.empty())
+            cout << "There is not purchase in the systemp yet, please add one first :)" <<endl;
+        return this->print(this->purchaseStack);
     }
 
-    PurchaseQuery *printReverse() {
-        auto current = this->reverseThisStack();
-
-        while (!current.empty()) {
-            current.top().print();
-            current.pop();
-        }
-        return this;
+    /**
+     * Print Purchase ascending
+     * @return
+     */
+    PurchaseQuery *printAcs() {
+        if (this->purchaseStack.empty())
+            cout << "There is not purchase in the systemp yet, please add one first :)" <<endl;
+        return this->print(this->reverseThisStack());
     }
 
     Purchase where(QUERY_TYPE queryType, int searchQuery) {
@@ -123,23 +123,23 @@ public:
     static void test() {
         cout << "TEST 1 : Creating test data \t\t\t\t\t\t: ";
         assert(PurchaseQuery().init().purchaseStack.size() == 5);
-        cout << "PASSED \n";
+        cout << "PASSED " << endl;
 
         cout << "TEST 2 : Get Record number 1 \t\t\t\t\t\t: ";
         assert(PurchaseQuery().init().where(PurchaseQuery::ID, 1).id == 1);
-        cout << "PASSED \n";
+        cout << "PASSED " << endl;
 
         cout << "TEST 3 : Get Multiple Record for Payment Type \t\t: ";
         assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::CASH).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::E_WALLET).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::ONLINE_BANKING).size() == 1);
-        cout << "PASSED \n";
+        cout << "PASSED " << endl;
 
         cout << "TEST 4 : Get Multiple Record for Customer Type \t\t: ";
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::NORMAL_CUSTOMER).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::MEMBER).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::WHOLESALE).size() == 1);
-        cout << "PASSED \n";
+        cout << "PASSED " << endl;
     }
 
 private:
@@ -220,6 +220,36 @@ private:
         }
 
         return tempStack;
+    }
+
+private:
+    PurchaseQuery *print(stack <Purchase> current) {
+        while (!current.empty()) {
+            cout << "id" << setw(11)
+                 << "Quantity" << setw(15)
+                 << "Customer Type" << setw(20)
+                 << "Payment Type" << setw(18)
+                 << "Total Price" << setw(12)
+                 << "Book Info" << setw(1)
+                 << endl
+                 << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
+                 << setfill(' ');  //fill with spaces
+
+            while (!current.empty()) {
+                auto purchase = current.top();
+
+                cout << setw(05) << left << purchase.id // left : Align in left
+                     << setw(10) << left << purchase.quantity
+                     << setw(21) << left << purchase.getCustomerType(purchase.customerType)
+                     << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
+                     << setw(13) << left << purchase.totalPrice
+                     << setw(01) << left << purchase.book.toString()
+                     << endl;
+
+                current.pop();
+            }
+        }
+        return this;
     }
 };
 

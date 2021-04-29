@@ -12,4 +12,5 @@ add_executable(
         Exception/InvalidQueryType.h
         Models/Purchase.h
         Query/PurchaseQuery.h
-        Exception/InvalidInput.h)
+        Exception/InvalidInput.h
+)
