@@ -8,6 +8,7 @@
 #include <iostream>
 #include <utility>
 #include <cassert>
+#include <iomanip>
 
 #include "../Models/Book.h"
 #include "../Exception/ModalNotFoundException.h"
@@ -25,18 +26,47 @@ public:
     Book book;
     struct BooksNode *next{};
 
+    /**
+     * https://www.cplusplus.com/reference/iomanip/setfill/
+     * @return
+     */
     BooksNode *printNode() {
         BooksNode *current = this;
 
         if (current == nullptr) {
-            cout << "NULL";
+            cout << "There is no Book in the System yet, please add one to continue";
             return this;
         }
 
+        cout << "id" << setw(8)
+             << "Title" << setw(35)
+             << "Author" << setw(25)
+             << "Genre" << setw(18)
+             << "Category" << setw(10)
+             << "ISBN" << setw(18)
+             << "Quality" << setw(10)
+             << "price" << setw(17)
+             << "Availability" << endl
+             << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
+             << setfill(' ');  //fill with spaces
+
         while (current != nullptr) {
-            current->book.print();
+            auto book = current->book;
+
+            cout << setw(05) << left << book.id // left : Align in left
+                 << setw(34) << left << book.title
+                 << setw(26) << left << book.author
+                 << setw(15) << left << book.getGenre(book.genre)
+                 << setw(14) << left << book.getCategory(book.category)
+                 << setw(15) << left << book.ISBN
+                 << setw(12) << left << book.quantity
+                 << setw(10) << left << book.price
+                 << setw(00) << left << book.isAvailable()
+                 << endl;
+
             current = current->next;
         }
+        fflush(stdout);
         delete current;
         return this;
     }
@@ -182,7 +212,7 @@ public:
         return sorted;
     }
 
-    BookQuery *init() {
+    BookQuery init() {
         this->create(Book(1, "HARRY POTTER", "J. K. ROWLING",
                           Book::FANTASY, Book::FICTION,
                           "9780747532743", 50, 56.80, true));
@@ -210,35 +240,33 @@ public:
         this->create(Book(9, "THE HERO WITH A THOUSAND FACES", "JOSEPH CAMPBELL",
                           Book::REFERENCE, Book::NON_FICTION,
                           "9781577315933", 6, 78.00, true));
-        return this;
+        return *this;
     }
 
     static void test() {
         auto bookQ = BookQuery().init();
 
         cout << "TEST 1 : Update Record number 1 \t\t\t\t\t: ";
-        auto target = bookQ->where(bookQ->ID, 1);
-        bookQ->update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
-                           Book::FICTION, "9780747532743", 70, 76.80, true),
-                      target.id - 1);
-
-        assert(bookQ->where(bookQ->ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
+        auto target = bookQ.where(bookQ.ID, 1);
+        bookQ.update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
+                          Book::FICTION, "9780747532743", 70, 76.80, true),
+                     target.id - 1);
+        assert(bookQ.where(BookQuery::ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
         cout << "PASSED \n";
 
         cout << "TEST 2 : Delete Record ID 2 \t\t\t\t\t\t: ";
-        auto target2 = bookQ->where(bookQ->ID, 2);
-        bookQ->del(target2.id);
-        assert(bookQ->head->size() == 8);
+        auto target2 = bookQ.where(BookQuery::ID, 2);
+        bookQ.del(target2.id);
+        assert(bookQ.head->size() == 8);
         cout << "PASSED \n";
 
         cout << "TEST 3 : Find Record 3 \t\t\t\t\t\t\t\t: ";
-        auto target3 = bookQ->where(bookQ->ID, 3);
-        assert(target3.id == 3);
+        assert(bookQ.where(bookQ.ID, 3).id == 3);
         cout << "PASSED \n";
 
-        cout << "TEST 4 : Duplicate Record 4 for finding purpose \t: ";
-        auto result4 = bookQ->wheres(bookQ->CATEGORY, bookQ->where(bookQ->ID, 4).category);
-        assert(result4->size() == 3);
+        cout << "TEST 4 : Duplicate Record 4 by Category purpose \t: ";
+        assert(bookQ.wheres(BookQuery::CATEGORY, Book::FICTION)->size() == 3);
+        assert(bookQ.wheres(BookQuery::CATEGORY, Book::NON_FICTION)->size() == 5);
         cout << "PASSED \n";
     }
 
