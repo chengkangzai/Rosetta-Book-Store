@@ -41,7 +41,7 @@ void handleFilterBook(int temp) {
                  << "7. PERIODICALS" << endl
                  << "8. SELF_HELP" << endl
                  << "9. REFERENCE" << endl;
-            int genreTemp;
+            int genreTemp = 0;
             cin >> genreTemp;
             try {
 
@@ -85,7 +85,7 @@ void handleFilterBook(int temp) {
         case 2:
             cout << "1. NON_FICTION" << endl
                  << "2. FICTION" << endl;
-            int categoryTemp;
+            int categoryTemp = 0;
             cin >> categoryTemp;
             try {
                 switch (categoryTemp) {
@@ -118,7 +118,7 @@ void handleBookSection(int secondLevelOption) {
             bookQuery.head->printNode();
             break;
         case 3:
-            int searchQuery;
+            int searchQuery = 0;
             cout << "Enter Book ID " << endl;
             cin >> searchQuery;
             cin.ignore();
@@ -140,7 +140,7 @@ void handleBookSection(int secondLevelOption) {
             handleFilterBook(temp);
             break;
         case 5:
-            int bookID;
+            int bookID = 0;
             cout << "Enter Book ID that you want to update " << endl;
             cin >> bookID;
             cin.ignore();
@@ -159,7 +159,7 @@ void handleBookSection(int secondLevelOption) {
             bookQuery.insertionSort()->printNode();
             break;
         case 7:
-            int bookId;
+            int bookId = 0;
             cout << "Enter Book ID that you want to Delete " << endl;
             cin >> bookId;
             cin.ignore();
@@ -268,7 +268,7 @@ void handleFirstLevelOption(int firstLevelOption) {
 
 
 int main() {
-    int firstLevelOption;
+    int firstLevelOption = 0;
 
     do {
         firstLevelOption = getFirstLevelOption(firstLevelOption);

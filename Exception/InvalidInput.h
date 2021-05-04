@@ -2,12 +2,14 @@
 // Created by Cheng Kang Ching on 25/04/2021.
 //
 
+using namespace std;
 #ifndef ROSETTA_BOOK_STORE_INVALIDINPUT_H
 #define ROSETTA_BOOK_STORE_INVALIDINPUT_H
-class InvalidInput : virtual public std::exception {
+
+class InvalidInput : virtual public exception {
 
 protected:
-    std::string error_message;      ///< Error message
+    string error_message;      ///< Error message
 
 public:
 
@@ -15,7 +17,7 @@ public:
      *  @param msg The error message
      */
     explicit
-    InvalidInput(const std::string &msg) :
+    InvalidInput(const string &msg) :
             error_message(msg) {}
 
     /** Destructor.
@@ -32,4 +34,5 @@ public:
         return error_message.c_str();
     }
 };
+
 #endif //ROSETTA_BOOK_STORE_INVALIDINPUT_H

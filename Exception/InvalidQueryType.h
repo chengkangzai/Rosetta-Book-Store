@@ -7,10 +7,12 @@
 
 #include <iostream>
 
-class InvalidQueryType : virtual public std::exception {
+using namespace std;
+
+class InvalidQueryType : virtual public exception {
 
 protected:
-    std::string error_message;      ///< Error message
+    string error_message;      ///< Error message
 
 public:
 
@@ -18,7 +20,7 @@ public:
      *  @param msg The error message
      */
     explicit
-    InvalidQueryType(const std::string &msg) :
+    InvalidQueryType(const string &msg) :
             error_message(msg) {}
 
     /** Destructor.
@@ -35,7 +37,6 @@ public:
         return error_message.c_str();
     }
 };
-
 
 
 #endif //ROSETTA_BOOK_STORE_INVALIDQUERYTYPE_H

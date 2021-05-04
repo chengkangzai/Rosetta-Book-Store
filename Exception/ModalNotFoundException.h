@@ -7,11 +7,13 @@
 
 #include <iostream>
 
+using namespace std;
+
 //https://riptutorial.com/cplusplus/example/23640/custom-exception
-class ModalNotFoundException : virtual public std::exception {
+class ModalNotFoundException : virtual public exception {
 
 protected:
-    std::string error_message;      ///< Error message
+    string error_message;      ///< Error message
 
 public:
 
@@ -19,7 +21,7 @@ public:
      *  @param msg The error message
      */
     explicit
-    ModalNotFoundException(const std::string &msg) :
+    ModalNotFoundException(const string &msg) :
             error_message(msg) {}
 
     /** Destructor.

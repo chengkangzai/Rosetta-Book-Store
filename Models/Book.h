@@ -50,7 +50,8 @@ public:
     }
 
     string toString() {
-        return "[Book] id: "+to_string(id) + " | Title: " + title + " | Author: " + author + " | " + this->getGenre(genre) + " | " +
+        return "[Book] id: " + to_string(id) + " | Title: " + title + " | Author: " + author + " | " +
+               this->getGenre(genre) + " | " +
                this->getCategory(category) + " | ISBN: " + ISBN + " | Qty: " +
                to_string(quantity) + " | Price: " + to_string(price) + " | Available ? " + this->isAvailable();
     }
@@ -86,6 +87,7 @@ public:
                 return "FICTION";
         }
     }
+
     /**
      * Ternary Operator ... more marks ?
      * @return
@@ -127,7 +129,7 @@ public:
              << "7. PERIODICALS" << endl
              << "8. SELF_HELP" << endl
              << "9. REFERENCE" << endl;
-        int genreTemp;
+        int genreTemp = 0;
         cin >> genreTemp;
         switch (genreTemp) {
             case 1:
@@ -164,7 +166,7 @@ public:
         cout << "Pick a Category" << endl
              << "1. NON_FICTION" << endl
              << "2. FICTION" << endl;
-        int categoryTemp;
+        int categoryTemp = 0;
         cin >> categoryTemp;
         switch (categoryTemp) {
             case 1:
@@ -188,7 +190,7 @@ public:
         cout << "Enter price" << endl;
         cin >> this->price;
 
-        int availTemp;
+        int availTemp = 0;
         cout << "Available ? 1. Yes 2. No";
         cin >> availTemp;
         this->_isAvailable = availTemp == 1;

@@ -98,9 +98,9 @@ public:
         cin.ignore();
         fflush(stdout);
 
-        bool isNotValidBook;
+        bool isNotValidBook = true;
         do {
-            int bookID;
+            int bookID = 0;
             cout << "Enter Book ID" << endl;
             cin >> bookID;
             cin.ignore();
@@ -119,7 +119,7 @@ public:
              << "1. NORMAL_CUSTOMER" << endl
              << "2. WHOLESALE" << endl
              << "3. MEMBER" << endl;
-        int customerInput;
+        int customerInput = 0;
         cin >> customerInput;
         cin.ignore();
         fflush(stdout);
@@ -143,7 +143,7 @@ public:
              << "3. MASTER_CARD" << endl
              << "4. E_WALLET" << endl
              << "5. ONLINE_BANKING" << endl;
-        int paymentInput;
+        int paymentInput = 0;
         cin >> paymentInput;
         cin.ignore();
         fflush(stdout);
