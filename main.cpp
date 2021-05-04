@@ -30,7 +30,7 @@ void printCredit() {
 
 void handleFilterBook(int temp) {
     switch (temp) {
-        case 1:
+        case 1: {
             cout << "Pick a Genre" << endl
                  << "1. FANTASY" << endl
                  << "2. HISTORICAL" << endl
@@ -82,7 +82,8 @@ void handleFilterBook(int temp) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }
             break;
-        case 2:
+        }
+        case 2: {
             cout << "1. NON_FICTION" << endl
                  << "2. FICTION" << endl;
             int categoryTemp = 0;
@@ -104,6 +105,7 @@ void handleFilterBook(int temp) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }
             break;
+        }
         default:
             throw InvalidInput("Invalid Input");
     }
@@ -111,13 +113,15 @@ void handleFilterBook(int temp) {
 
 void handleBookSection(int secondLevelOption) {
     switch (secondLevelOption) {
-        case 1:
+        case 1: {
             bookQuery.create(Book().getFromCli());
+        }
             break;
-        case 2:
+        case 2: {
             bookQuery.head->printNode();
             break;
-        case 3:
+        }
+        case 3: {
             int searchQuery = 0;
             cout << "Enter Book ID " << endl;
             cin >> searchQuery;
@@ -130,7 +134,8 @@ void handleBookSection(int secondLevelOption) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }
             break;
-        case 4:
+        }
+        case 4: {
             cout << "Filter Book Based on : " << endl
                  << "1. Category " << endl
                  << "2. Genre " << endl;
@@ -139,7 +144,8 @@ void handleBookSection(int secondLevelOption) {
 
             handleFilterBook(temp);
             break;
-        case 5:
+        }
+        case 5: {
             int bookID = 0;
             cout << "Enter Book ID that you want to update " << endl;
             cin >> bookID;
@@ -154,11 +160,13 @@ void handleBookSection(int secondLevelOption) {
             }
 
             break;
-        case 6:
+        }
+        case 6: {
             cout << "Sort by Total Quantity of the Books" << endl;
             bookQuery.insertionSort()->printNode();
             break;
-        case 7:
+        }
+        case 7: {
             int bookId = 0;
             cout << "Enter Book ID that you want to Delete " << endl;
             cin >> bookId;
@@ -173,6 +181,7 @@ void handleBookSection(int secondLevelOption) {
             }
 
             break;
+        }
         case 8:
             exit(1);
     }
@@ -202,8 +211,9 @@ void handlePurchaseSection(int secondLevelOption) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }
             break;
-        case 5:
+        case 5: {
             exit(1);
+        }
     }
 
 }
@@ -217,7 +227,7 @@ void handlePurchaseSection(int secondLevelOption) {
 void handleFirstLevelOption(int firstLevelOption) {
     int secondLevelOption;
     switch (firstLevelOption) {
-        case 1:
+        case 1: {
             cout << "1. Add Book " << endl
                  << "2. Read Book " << endl
                  << "3. Search Book " << endl
@@ -232,7 +242,8 @@ void handleFirstLevelOption(int firstLevelOption) {
             fflush(stdout);
             handleBookSection(secondLevelOption);
             break;
-        case 2:
+        }
+        case 2: {
             cout << "1. Add Purchase " << endl
                  << "2. View Purchase " << endl
                  << "3. Sort Purchase " << endl
@@ -244,31 +255,36 @@ void handleFirstLevelOption(int firstLevelOption) {
             fflush(stdout);
             handlePurchaseSection(secondLevelOption);
             break;
-        case 3:
+        }
+        case 3: {
             cout << "Performing Unit Testing ...  " << endl;
             BookQuery::test();
             cout << "------------------------------------------------------------" << endl;
             PurchaseQuery::test();
             break;
-        case 4:
+        }
+        case 4: {
             cout << "Lazy huh ? Initializing Prefilled data ... " << endl;
             bookQuery = BookQuery().init();
             purchaseQuery = PurchaseQuery().init();
             break;
-        case 5:
+        }
+        case 5: {
             printCredit();
             break;
-        default:
+        }
+        default: {
             cout << "Thanks For using Rosetta Book Store ! " << endl
                  << "Credit : " << endl;
             printCredit();
             exit(1);
+        }
     }
 }
 
 
 int main() {
-    int firstLevelOption = 0;
+    int firstLevelOption;
 
     do {
         firstLevelOption = getFirstLevelOption(firstLevelOption);
