@@ -284,7 +284,7 @@ void handleFirstLevelOption(int firstLevelOption) {
 
 
 int main() {
-    int firstLevelOption;
+    int firstLevelOption = 0;
 
     do {
         firstLevelOption = getFirstLevelOption(firstLevelOption);
