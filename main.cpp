@@ -154,7 +154,7 @@ void handleBookSection(int secondLevelOption) {
 
             try {
                 auto target = bookQuery.where(BookQuery::ID, bookID);
-                bookQuery.update(Book().getFromCli(), target.id - 1);
+                bookQuery.update(Book().getFromCli());
             } catch (ModalNotFoundException modalNotFoundException) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }

@@ -146,16 +146,19 @@ public:
         return this;
     }
 
-    const BookQuery *update(Book newBook, int index) const {
-        if (index < 0 || index >= head->size()) {
-            throw ("Index out of bound. \n");
-        }
+    const BookQuery *update(Book newBook) const {
         BooksNode *current = head;
-        for (int i = 0; i < index; i++) {
-            current = current->next;
+        while (current != nullptr) {
+            cout << "";
+            if (current->book.id == newBook.id) {
+                current->book = Book(move(newBook));
+                return this;
+            } else {
+                current = current->next;
+            }
         }
-        current->book = Book(move(newBook));
-        return this;
+
+        throw ModalNotFoundException("Book not found");
     }
 
     /**
@@ -249,8 +252,7 @@ public:
         cout << "TEST 1 : Update Record number 1 \t\t\t\t\t: ";
         auto target = bookQ.where(bookQ.ID, 1);
         bookQ.update(Book(1, "DATA STRUCTURE AND ALGORITHM", "Rolin Jackson", Book::FANTASY,
-                          Book::FICTION, "9780747532743", 70, 76.80, true),
-                     target.id - 1);
+                          Book::FICTION, "9780747532743", 70, 76.80, true));
         assert(bookQ.where(BookQuery::ID, 1).title == "DATA STRUCTURE AND ALGORITHM");
         cout << "PASSED \n";
 
