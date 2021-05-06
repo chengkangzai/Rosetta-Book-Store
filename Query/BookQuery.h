@@ -166,9 +166,6 @@ public:
      * @return
      */
     BookQuery *del(int bookID) {
-        if (bookID < 0 || bookID >= head->size()) {
-            throw ("Index out of bound. \n");
-        }
         //Instead of checking it is one, check it its the first index ...
         if (this->where(this->INDEX, 0).id == bookID) {
             head = head->next;
