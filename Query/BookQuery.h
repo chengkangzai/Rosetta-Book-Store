@@ -149,7 +149,6 @@ public:
     const BookQuery *update(Book newBook) const {
         BooksNode *current = head;
         while (current != nullptr) {
-            cout << "";
             if (current->book.id == newBook.id) {
                 current->book = Book(move(newBook));
                 return this;
