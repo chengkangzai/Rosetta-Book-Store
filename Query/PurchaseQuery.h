@@ -222,7 +222,6 @@ private:
         return tempStack;
     }
 
-private:
     PurchaseQuery *print(stack <Purchase> current) {
         while (!current.empty()) {
             cout << "id" << setw(11)
