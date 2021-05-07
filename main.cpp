@@ -201,7 +201,7 @@ void handlePurchaseSection(int secondLevelOption) {
         case 3: {
             cout << "Print all purchase sort by Total price" << endl;
             auto current = purchaseQuery.sortByTotalPrice();
-            StackHelper().print(current);
+            StackHelper().print(current, StackHelper::DESC);
         }
             break;
         case 4: {

@@ -16,32 +16,56 @@ public:
         ASC, DESC
     };
 
-    StackHelper *print(stack<Purchase> current, PRINT_METHOD printMethod = ASC) {
-        if (printMethod == ASC) {
-            stack<Purchase> current = this->reverse(current);
-        }
-        cout << "id" << setw(11)
-             << "Quantity" << setw(15)
-             << "Customer Type" << setw(20)
-             << "Payment Type" << setw(18)
-             << "Total Price" << setw(12)
-             << "Book Info" << setw(1)
-             << endl
-             << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
-             << setfill(' ');  //fill with spaces
+    StackHelper *print(stack<Purchase> current, PRINT_METHOD printMethod) {
+        if (printMethod == DESC) {
+            stack<Purchase> temp = this->reverse(current);
+            cout << "id" << setw(11)
+                 << "Quantity" << setw(15)
+                 << "Customer Type" << setw(20)
+                 << "Payment Type" << setw(18)
+                 << "Total Price" << setw(12)
+                 << "Book Info" << setw(1)
+                 << endl
+                 << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
+                 << setfill(' ');  //fill with spaces
 
-        while (!current.empty()) {
-            auto purchase = current.top();
+            while (!temp.empty()) {
+                auto purchase = temp.top();
 
-            cout << setw(05) << left << purchase.id // left : Align in left
-                 << setw(10) << left << purchase.quantity
-                 << setw(21) << left << purchase.getCustomerType(purchase.customerType)
-                 << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
-                 << setw(13) << left << purchase.totalPrice
-                 << setw(01) << left << purchase.book.toString()
-                 << endl;
+                cout << setw(05) << left << purchase.id // left : Align in left
+                     << setw(10) << left << purchase.quantity
+                     << setw(21) << left << purchase.getCustomerType(purchase.customerType)
+                     << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
+                     << setw(13) << left << purchase.totalPrice
+                     << setw(01) << left << purchase.book.toString()
+                     << endl;
 
-            current.pop();
+                temp.pop();
+            }
+        } else {
+            cout << "id" << setw(11)
+                 << "Quantity" << setw(15)
+                 << "Customer Type" << setw(20)
+                 << "Payment Type" << setw(18)
+                 << "Total Price" << setw(12)
+                 << "Book Info" << setw(1)
+                 << endl
+                 << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
+                 << setfill(' ');  //fill with spaces
+
+            while (!current.empty()) {
+                auto purchase = current.top();
+
+                cout << setw(05) << left << purchase.id // left : Align in left
+                     << setw(10) << left << purchase.quantity
+                     << setw(21) << left << purchase.getCustomerType(purchase.customerType)
+                     << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
+                     << setw(13) << left << purchase.totalPrice
+                     << setw(01) << left << purchase.book.toString()
+                     << endl;
+
+                current.pop();
+            }
         }
         return this;
     }
