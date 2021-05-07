@@ -143,12 +143,13 @@ private:
 
     Purchase findByID(int id) {
         stack<Purchase> tempStack;
+        auto current = this->purchaseStack;
 
-        while (!this->purchaseStack.empty()) {
-            if (this->purchaseStack.top().id == id)
-                return this->purchaseStack.top();
+        while (!current.empty()) {
+            if (current.top().id == id)
+                return current.top();
             else
-                this->purchaseStack.pop();
+                current.pop();
         }
         throw ModalNotFoundException("There is no modal found");
     }
@@ -156,6 +157,7 @@ private:
     stack<Purchase> findByBookId(int id) {
         stack<Purchase> tempStack;
         auto current = this->purchaseStack;
+
         while (current.empty()) {
             auto item = current.top();
             if (item.book.id == id)
