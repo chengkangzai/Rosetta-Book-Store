@@ -33,7 +33,7 @@ public:
      */
     PurchaseQuery *printDesc() {
         if (this->purchaseStack.empty())
-            cout << "There is not purchase in the systemp yet, please add one first :)" <<endl;
+            cout << "There is not purchase in the systemp yet, please add one first :)" << endl;
         return this->print(this->purchaseStack);
     }
 
@@ -43,7 +43,7 @@ public:
      */
     PurchaseQuery *printAcs() {
         if (this->purchaseStack.empty())
-            cout << "There is not purchase in the systemp yet, please add one first :)" <<endl;
+            cout << "There is not purchase in the systemp yet, please add one first :)" << endl;
         return this->print(this->reverseThisStack());
     }
 
@@ -153,8 +153,8 @@ private:
 
         while (!current.empty()) {
             auto item = current.top();
-            current.pop();
             tempStack.push(item);
+            current.pop();
         }
         return tempStack;
     }
@@ -223,31 +223,30 @@ private:
     }
 
     PurchaseQuery *print(stack <Purchase> current) {
+        cout << "id" << setw(11)
+             << "Quantity" << setw(15)
+             << "Customer Type" << setw(20)
+             << "Payment Type" << setw(18)
+             << "Total Price" << setw(12)
+             << "Book Info" << setw(1)
+             << endl
+             << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
+             << setfill(' ');  //fill with spaces
+
         while (!current.empty()) {
-            cout << "id" << setw(11)
-                 << "Quantity" << setw(15)
-                 << "Customer Type" << setw(20)
-                 << "Payment Type" << setw(18)
-                 << "Total Price" << setw(12)
-                 << "Book Info" << setw(1)
-                 << endl
-                 << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
-                 << setfill(' ');  //fill with spaces
+            auto purchase = current.top();
 
-            while (!current.empty()) {
-                auto purchase = current.top();
+            cout << setw(05) << left << purchase.id // left : Align in left
+                 << setw(10) << left << purchase.quantity
+                 << setw(21) << left << purchase.getCustomerType(purchase.customerType)
+                 << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
+                 << setw(13) << left << purchase.totalPrice
+                 << setw(01) << left << purchase.book.toString()
+                 << endl;
 
-                cout << setw(05) << left << purchase.id // left : Align in left
-                     << setw(10) << left << purchase.quantity
-                     << setw(21) << left << purchase.getCustomerType(purchase.customerType)
-                     << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
-                     << setw(13) << left << purchase.totalPrice
-                     << setw(01) << left << purchase.book.toString()
-                     << endl;
-
-                current.pop();
-            }
+            current.pop();
         }
+
         return this;
     }
 };
