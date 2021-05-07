@@ -219,7 +219,7 @@ void handlePurchaseSection(int secondLevelOption) {
                 cin.ignore();
                 fflush(stdout);
                 try {
-                    book = BookQuery().where(BookQuery::ID, bookID);
+                    book = bookQuery.where(BookQuery::ID, bookID);
                     isNotValidBook = false;
                 } catch (ModalNotFoundException modalNotFoundException) {
                     cout << "The ID you enter do not have associated Book in our Data base " << endl;
