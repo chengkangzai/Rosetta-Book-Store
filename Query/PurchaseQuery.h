@@ -11,7 +11,7 @@
 
 #include "../Models/Purchase.h"
 #include "../Query/BookQuery.h"
-
+#include "../StackHelper.h"
 
 class PurchaseQuery {
 public:
@@ -20,7 +20,7 @@ public:
         ID, BOOK_ID, PAYMENT_TYPE, CUSTOMER_TYPE
     };
 
-    stack <Purchase> purchaseStack;
+    stack<Purchase> purchaseStack;
 
     PurchaseQuery *create(Purchase purchase) {
         this->purchaseStack.push(purchase);
@@ -34,7 +34,8 @@ public:
     PurchaseQuery *printDesc() {
         if (this->purchaseStack.empty())
             cout << "There is not purchase in the systemp yet, please add one first :)" << endl;
-        return this->print(this->purchaseStack);
+        StackHelper().print(this->purchaseStack, StackHelper::DESC);
+        return this;
     }
 
     /**
@@ -44,7 +45,8 @@ public:
     PurchaseQuery *printAcs() {
         if (this->purchaseStack.empty())
             cout << "There is not purchase in the systemp yet, please add one first :)" << endl;
-        return this->print(this->reverseThisStack());
+        StackHelper().print(this->purchaseStack, StackHelper::ASC);
+        return this;
     }
 
     Purchase where(QUERY_TYPE queryType, int searchQuery) {
@@ -53,19 +55,19 @@ public:
         return this->findByID(searchQuery);
     }
 
-    stack <Purchase> wheres(QUERY_TYPE queryType, int searchQuery) {
+    stack<Purchase> wheres(QUERY_TYPE queryType, int searchQuery) {
         if (queryType != BOOK_ID)
             throw InvalidQueryType("This method only support Book ID");
         return this->findByBookId(searchQuery);
     }
 
-    stack <Purchase> wheres(QUERY_TYPE queryType, Purchase::PAYMENT_TYPE searchQuery) {
+    stack<Purchase> wheres(QUERY_TYPE queryType, Purchase::PAYMENT_TYPE searchQuery) {
         if (queryType != PAYMENT_TYPE)
             throw InvalidQueryType("This method only support Payment Type");
         return this->findByPaymentType(searchQuery);
     }
 
-    stack <Purchase> wheres(QUERY_TYPE queryType, Purchase::CUSTOMER_TYPE searchQuery) {
+    stack<Purchase> wheres(QUERY_TYPE queryType, Purchase::CUSTOMER_TYPE searchQuery) {
         if (queryType != CUSTOMER_TYPE)
             throw InvalidQueryType("This method only support Customer Type");
         return this->findByCustomerType(searchQuery);
@@ -76,23 +78,24 @@ public:
      * https://www.codespeedy.com/sorting-a-stack-using-stl-in-cpp/
      * @return
      */
-    stack <Purchase> sortByTotalPrice() {
-        stack <Purchase> current;
+    stack<Purchase> sortByTotalPrice() {
+        stack<Purchase> sorted;
+        stack<Purchase> current = this->purchaseStack;
 
-        while (!purchaseStack.empty()) {
+        while (!current.empty()) {
             // pop out the first element
-            Purchase temp = purchaseStack.top();
-            purchaseStack.pop();
+            Purchase temp = current.top();
+            current.pop();
 
-            while (!current.empty() && current.top().totalPrice > temp.totalPrice) {
-                purchaseStack.push(current.top());
-                current.pop();
+            while (!sorted.empty() && sorted.top().totalPrice > temp.totalPrice) {
+                current.push(sorted.top());
+                sorted.pop();
             }
-
             // push temp in end
-            current.push(temp);
+            sorted.push(temp);
         }
-        return current;
+
+        return sorted;
     }
 
     PurchaseQuery init() {
@@ -129,13 +132,7 @@ public:
         assert(PurchaseQuery().init().where(PurchaseQuery::ID, 1).id == 1);
         cout << "PASSED " << endl;
 
-        cout << "TEST 3 : Get Multiple Record for Payment Type \t\t: ";
-        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::CASH).size() == 2);
-        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::E_WALLET).size() == 2);
-        assert(PurchaseQuery().init().wheres(PurchaseQuery::PAYMENT_TYPE, Purchase::ONLINE_BANKING).size() == 1);
-        cout << "PASSED " << endl;
-
-        cout << "TEST 4 : Get Multiple Record for Customer Type \t\t: ";
+        cout << "TEST 3 : Get Multiple Record for Customer Type \t\t: ";
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::NORMAL_CUSTOMER).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::MEMBER).size() == 2);
         assert(PurchaseQuery().init().wheres(PurchaseQuery::CUSTOMER_TYPE, Purchase::WHOLESALE).size() == 1);
@@ -143,112 +140,77 @@ public:
     }
 
 private:
-    /**
-     * https://stackoverflow.com/questions/15648313/how-to-reverse-a-stack
-     * @return
-     */
-    stack <Purchase> reverseThisStack() {
-        stack <Purchase> tempStack;
-        auto current = purchaseStack;
-
-        while (!current.empty()) {
-            auto item = current.top();
-            tempStack.push(item);
-            current.pop();
-        }
-        return tempStack;
-    }
 
     Purchase findByID(int id) {
-        stack <Purchase> tempStack;
+        stack<Purchase> tempStack;
 
-        while (!purchaseStack.empty()) {
-            if (purchaseStack.top().id == id)
-                return purchaseStack.top();
+        while (!this->purchaseStack.empty()) {
+            if (this->purchaseStack.top().id == id)
+                return this->purchaseStack.top();
             else
-                purchaseStack.pop();
+                this->purchaseStack.pop();
         }
         throw ModalNotFoundException("There is no modal found");
     }
 
-    stack <Purchase> findByBookId(int id) {
-        stack <Purchase> tempStack;
-
-        while (!purchaseStack.empty()) {
-            auto item = purchaseStack.top();
+    stack<Purchase> findByBookId(int id) {
+        stack<Purchase> tempStack;
+        auto current = this->purchaseStack;
+        while (current.empty()) {
+            auto item = current.top();
             if (item.book.id == id)
                 tempStack.push(item);
-            purchaseStack.pop();
-        }
-
-        if (tempStack.empty()) {
-            throw ModalNotFoundException("There is no modal found");
-        }
-
-        return tempStack;
-    }
-
-    stack <Purchase> findByPaymentType(Purchase::PAYMENT_TYPE paymentType) {
-        stack <Purchase> tempStack;
-
-        while (!purchaseStack.empty()) {
-            auto item = purchaseStack.top();
-            if (item.paymentType == paymentType)
-                tempStack.push(item);
-            purchaseStack.pop();
-        }
-
-        if (tempStack.empty()) {
-            throw ModalNotFoundException("There is no modal found");
-        }
-
-        return tempStack;
-    }
-
-    stack <Purchase> findByCustomerType(Purchase::CUSTOMER_TYPE customerType) {
-        stack <Purchase> tempStack;
-
-        while (!purchaseStack.empty()) {
-            auto item = purchaseStack.top();
-            if (item.customerType == customerType)
-                tempStack.push(item);
-            purchaseStack.pop();
-        }
-
-        if (tempStack.empty()) {
-            throw ModalNotFoundException("There is no modal found");
-        }
-
-        return tempStack;
-    }
-
-    PurchaseQuery *print(stack <Purchase> current) {
-        cout << "id" << setw(11)
-             << "Quantity" << setw(15)
-             << "Customer Type" << setw(20)
-             << "Payment Type" << setw(18)
-             << "Total Price" << setw(12)
-             << "Book Info" << setw(1)
-             << endl
-             << setfill('-') << setw(8 + 35 + 25 + 18 + 10 + 18 + 10 + 17) << "-" << endl
-             << setfill(' ');  //fill with spaces
-
-        while (!current.empty()) {
-            auto purchase = current.top();
-
-            cout << setw(05) << left << purchase.id // left : Align in left
-                 << setw(10) << left << purchase.quantity
-                 << setw(21) << left << purchase.getCustomerType(purchase.customerType)
-                 << setw(20) << left << purchase.getPaymentType(purchase.paymentType)
-                 << setw(13) << left << purchase.totalPrice
-                 << setw(01) << left << purchase.book.toString()
-                 << endl;
-
             current.pop();
         }
 
-        return this;
+        if (tempStack.empty()) {
+            throw ModalNotFoundException("There is no modal found");
+        }
+
+        return tempStack;
     }
+
+    stack<Purchase> findByPaymentType(Purchase::PAYMENT_TYPE paymentType) {
+        stack<Purchase> tempStack;
+        auto current = this->purchaseStack;
+
+        while (current.empty()) {
+            auto item = current.top();
+            if (item.paymentType == paymentType) {
+                tempStack.push(item);
+//                cout << "\n STUPID \n ";
+            } else {
+                cout << "\n STUPID \n ";
+                current.pop();
+            }
+        }
+
+        if (tempStack.empty()) {
+            throw ModalNotFoundException("There is no modal found");
+        }
+
+        return tempStack;
+    }
+
+    stack<Purchase> findByCustomerType(Purchase::CUSTOMER_TYPE customerType) {
+        stack<Purchase> tempStack;
+        stack<Purchase> current = this->purchaseStack;
+
+        while (!current.empty()) {
+            auto item = current.top();
+            if (item.customerType == customerType)
+                tempStack.push(item);
+            current.pop();
+        }
+
+        if (tempStack.empty()) {
+            throw ModalNotFoundException("There is no modal found");
+        }
+
+        return tempStack;
+    }
+
+
 };
 
 

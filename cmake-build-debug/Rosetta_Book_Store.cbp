@@ -101,6 +101,9 @@
 		<Unit filename="/Users/cck/CLionProjects/Rosetta-Book-Store/Query/PurchaseQuery.h">
 			<Option target="Rosetta_Book_Store"/>
 		</Unit>
+		<Unit filename="/Users/cck/CLionProjects/Rosetta-Book-Store/StackHelper.h">
+			<Option target="Rosetta_Book_Store"/>
+		</Unit>
 		<Unit filename="/Users/cck/CLionProjects/Rosetta-Book-Store/main.cpp">
 			<Option target="Rosetta_Book_Store"/>
 		</Unit>

@@ -189,18 +189,22 @@ void handleBookSection(int secondLevelOption) {
 
 void handlePurchaseSection(int secondLevelOption) {
     switch (secondLevelOption) {
-        case 1:
+        case 1: {
             purchaseQuery.create(Purchase().getFromCli());
             break;
-        case 2:
+        }
+        case 2: {
             cout << "Print all purchase from newest to oldest" << endl;
             purchaseQuery.printAcs();
             break;
-        case 3:
+        }
+        case 3: {
             cout << "Print all purchase sort by Total price" << endl;
-            purchaseQuery.sortByTotalPrice();
+            auto current = purchaseQuery.sortByTotalPrice();
+            StackHelper().print(current);
+        }
             break;
-        case 4:
+        case 4: {
             cout << "Enter Purchase ID :";
             int purchaseId;
             cin >> purchaseId;
@@ -211,6 +215,7 @@ void handlePurchaseSection(int secondLevelOption) {
                 cout << "The ID you enter do not have associated Book in our Data base " << endl;
             }
             break;
+        }
         case 5: {
             exit(1);
         }

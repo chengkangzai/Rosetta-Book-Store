@@ -8,5 +8,6 @@ CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../Models/Book.h
 CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../Models/Purchase.h
 CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../Query/BookQuery.h
 CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../Query/PurchaseQuery.h
+CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../StackHelper.h
 CMakeFiles/Rosetta_Book_Store.dir/main.cpp.o: ../main.cpp
 

@@ -13,4 +13,4 @@ add_executable(
         Models/Purchase.h
         Query/PurchaseQuery.h
         Exception/InvalidInput.h
-)
+        StackHelper.h)
