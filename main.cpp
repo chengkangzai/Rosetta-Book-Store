@@ -190,7 +190,98 @@ void handleBookSection(int secondLevelOption) {
 void handlePurchaseSection(int secondLevelOption) {
     switch (secondLevelOption) {
         case 1: {
-            purchaseQuery.create(Purchase().getFromCli());
+
+            int id;
+            int quantity;
+            double totalPrice;
+            Book book;
+            Purchase::CUSTOMER_TYPE customerType;
+            Purchase::PAYMENT_TYPE paymentType;
+
+
+            cout << "Enter id" << endl;
+            cin >> id;
+            cin.ignore();
+            fflush(stdout);
+
+            int quantityTemp = 1;
+            cout << "Enter Quantity" << endl;
+            cin >> quantityTemp;
+            quantity = quantityTemp;
+            cin.ignore();
+            fflush(stdout);
+
+            bool isNotValidBook = true;
+            do {
+                int bookID = 0;
+                cout << "Enter Book ID" << endl;
+                cin >> bookID;
+                cin.ignore();
+                fflush(stdout);
+                try {
+                    book = BookQuery().where(BookQuery::ID, bookID);
+                    isNotValidBook = false;
+                } catch (ModalNotFoundException modalNotFoundException) {
+                    cout << "The ID you enter do not have associated Book in our Data base " << endl;
+                    cout << "Please try again " << endl;
+                }
+            } while (isNotValidBook);
+
+
+            cout << "Enter Customer Type " << endl
+                 << "1. NORMAL_CUSTOMER" << endl
+                 << "2. WHOLESALE" << endl
+                 << "3. MEMBER" << endl;
+            int customerInput = 0;
+            cin >> customerInput;
+            cin.ignore();
+            fflush(stdout);
+            switch (customerInput) {
+                case 1 :
+                    customerType = Purchase::NORMAL_CUSTOMER;
+                    break;
+                case 2 :
+                    customerType = Purchase::WHOLESALE;
+                    break;
+                case 3 :
+                    customerType = Purchase::MEMBER;
+                    break;
+                default:
+                    throw InvalidInput("Invalid Input");
+            }
+
+            cout << "Enter Payment Type " << endl
+                 << "1. CASH" << endl
+                 << "2. VISA_CARD" << endl
+                 << "3. MASTER_CARD" << endl
+                 << "4. E_WALLET" << endl
+                 << "5. ONLINE_BANKING" << endl;
+            int paymentInput = 0;
+            cin >> paymentInput;
+            cin.ignore();
+            fflush(stdout);
+
+            switch (paymentInput) {
+                case 1:
+                    paymentType = Purchase::CASH;
+                    break;
+                case 2:
+                    paymentType = Purchase::VISA_CARD;
+                    break;
+                case 3:
+                    paymentType = Purchase::MASTER_CARD;
+                    break;
+                case 4:
+                    paymentType = Purchase::E_WALLET;
+                    break;
+                case 5:
+                    paymentType = Purchase::ONLINE_BANKING;
+                    break;
+                default:
+                    throw InvalidInput("Invalid Input");
+            }
+
+            purchaseQuery.create(Purchase(id, quantity, book, customerType, paymentType));
             break;
         }
         case 2: {
